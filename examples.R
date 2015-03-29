@@ -1,9 +1,15 @@
+
+#### change working directory
 setwd("C:/Users/Jesse/my documents/SUMO/2014/silacquant")
 setwd("C:/Users/JGmeyer/my documents/R/silacquant")
 
 files<-list.files()
 files
 
+
+
+### create class for peptide identification data
+###
 
 setClass("pepsum",representation(summary="matrix",scans="ANY",specdir="character",
 	specfiles="list",data="ANY", totalheat="matrix",residues="character",
@@ -12,64 +18,40 @@ setClass("pepsum",representation(summary="matrix",scans="ANY",specdir="character
 	fraction="character",pepvec="ANY",provec="ANY",filenames="ANY",p1.index="ANY",
 	modposition.peptide="ANY",countlist="list",pepraw="ANY",ionCoverage="list",
 	ionCovSum="list",modindex="list",modsummary="list"))
+
+
 mgpl.pos<-proteinPositions(object=mgpl,
 		fasta="C:/MSGFplus/database/110712_human.cc.fasta",
 		writetsv=FALSE,
 		name="mgplus.localized.tsv")
 
-
+#### first read the peptide prophet results for all IDs and SUMO-remnant-only IDs into pepsum objects
 mgpl.s<-read.PepProph(input=files[85])
 mgpl.s.all<-read.PepProph(input=files[79])
+
+#### remove those IDs with localization scores below an arbitrary value
 mgpl.s<-removeLowLocalization(object=mgpl.s,minscore=0.75)
+
+#### determine to position of each site ID in their protein
 mgpl.s.pos<-proteinPositions(object=mgpl.s,
 		fasta="C:/MSGFplus/database/110712_human.cc.fasta",
 		writetsv=FALSE,
 		name="mgplus.localized.tsv")
+
+#### summarize and combine the unique protein site IDs
 mgpl.s.ave<-summarizeProtPositions(object=mgpl.s.pos)
+
+#### compute the weighted average of sites identified by with multiple sequences,
+#### then determine which sites are outside at least one standard deviation
+#### will produce a plot of quantification values as given in figure 3a
 mgpl.s.sig<-getSignificant(allIDs=mgpl.s.all,targetIDs=mgpl.s.ave)
 
-
-mgpl<-read.PepProph(input=files[100])
-mgpl.all<-read.PepProph(input=files[98])
-mgpl<-removeLowLocalization(object=mgpl,minscore=0.75)
-
-mgpl<-proteinPositions(object=mgpl,
-		fasta="F:/MSGFplus.20140716/database/110712_human.cc.fasta",
-		writetsv=FALSE,
-		name="mgplus.localized.tsv")
-mgpl<-summarizeProtPositions(mgpl)
-
-mgpl.pos<-proteinPositions(object=mgpl,
-		fasta="C:/MSGFplus/database/110712_human.cc.fasta",
-		writetsv=FALSE,
-		name="mgplus.localized.tsv")
-
-mgpl.ave<-summarizeProtPositions(object=mgpl.pos)
-mgpl.sig<-getSignificant(stdev=0.9404181,allIDs=mgpl.all,targetIDs=mgpl.ave)
-
-mgneg<-read.PepProph(input=files[11])
-mgneg.all<-read.PepProph(input=files[8])
-mgneg@modposition.peptide
-mgneg<-removeLowLocalization(object=mgneg,minscore=0.75)
-mgneg.pos<-proteinPositions(object=mgneg,
-		fasta="C:/MSGFplus/database/110712_human.cc.fasta",
-		writetsv=FALSE,
-		name="mgneg.localized.tsv")
-mgneg.pos@modposition.protein
-mgneg.sum<-summarizeProtPositions(object=mgneg.pos)
-mgneg.sum@modindex
-mgneg.sig<-getSignificant(allIDs=mgneg.all,targetIDs=mgneg.sum,name="MG132neg.norm.significant.tsv")
-mgneg@modindex
-mgneg@modposition.peptide
+#### correlate the sites between two different replicates, plot their quant values, and determine a linear fit 
+newobject<-correlatepositions(object1=MG132.single, object2=MG132.hprp)
 
 
-targetIDs@modindex
-mgpl@modindex
-#### need to fix this to ignore positions where weighted ave==0
 
 
-files<-list.files()
-files
 
 uv0<-read.PepProph(input=files[39])
 uv0.all<-read.PepProph(input=files[38])
@@ -109,6 +91,8 @@ uv8.sig<-getSignificant(allIDs=uv8.all,targetIDs=uv8,writetsv=T,name="uv8.norm.s
 length(object@data[1,])
 mgpl@data[1,]
 
+
+#### part to generate histograms as shown in figure 3a
 ?hist
 par(mfcol=c(2,1))
 hist(log(object@data[,26],2),breaks=200,main="weighted average")
