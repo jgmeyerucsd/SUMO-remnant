@@ -1,6 +1,9 @@
 
 
+#### function to filter identifications based on a minimum score
 
+#### usage:
+#### newobject<-removeLowLocalizations(object=[your pepsum object], minscore = [your choice of localization cutoff score])
 removeLowLocalization=function(object=mgpl.all,minscore=0.75){
 	PTMscorelines<-as.character(object@data[,"ptm_peptide"])
 	scores<-list()

@@ -1,3 +1,8 @@
+
+### function to read peptide prophet output in tab-delim format
+### usage:
+###  newobject<-read.PepProph(input=[your file path])
+
 read.PepProph=function(input=files[2],type="PeptideProphet"){
 	object<-new("pepsum")
 	object@filetype="PeptideProphet"
@@ -76,3 +81,6 @@ read.PepProph=function(input=files[2],type="PeptideProphet"){
 	object@chargevec<-chargevec
 	return(object)
 	}
+
+	
+	

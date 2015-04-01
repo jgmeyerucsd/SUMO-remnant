@@ -1,4 +1,14 @@
 
+#### function to determine the mod postion within a protein using the fasta DB
+####  usage:
+### 	#### determine to position of each site ID in their protein
+
+### mgpl.s.pos<-proteinPositions(object=mgpl.s,
+###		fasta="C:/MSGFplus/database/110712_human.cc.fasta",
+###		writetsv=FALSE,
+###		name="mgplus.localized.tsv")
+		
+		
 
 proteinPositions=function(fasta="C:/Users/JgMeyer/Documents/R/pepsum/pepsum/110712_human.cc.fasta",
 	object=mgpl.single.pos,

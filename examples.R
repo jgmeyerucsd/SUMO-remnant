@@ -1,8 +1,13 @@
+#### before running any functions, they must be defined in your R workspace by running them
+###		open all_functions.R, select all, and run within R
 
-#### change working directory
+
+
+#### change working directory to locations of tab-delim output from TPP
 setwd("C:/Users/Jesse/my documents/SUMO/2014/silacquant")
-setwd("C:/Users/JGmeyer/my documents/R/silacquant")
+#setwd("C:/Users/JGmeyer/my documents/R/silacquant")
 
+### make object with list of files and then print them
 files<-list.files()
 files
 
@@ -20,13 +25,11 @@ setClass("pepsum",representation(summary="matrix",scans="ANY",specdir="character
 	ionCovSum="list",modindex="list",modsummary="list"))
 
 
-mgpl.pos<-proteinPositions(object=mgpl,
-		fasta="C:/MSGFplus/database/110712_human.cc.fasta",
-		writetsv=FALSE,
-		name="mgplus.localized.tsv")
 
-#### first read the peptide prophet results for all IDs and SUMO-remnant-only IDs into pepsum objects
+#### first read the peptide prophet results for SUMO-remnant-only IDs into pepsum object
 mgpl.s<-read.PepProph(input=files[85])
+
+#### read all the IDs into pepsum object - used to get whole distribution for normalization
 mgpl.s.all<-read.PepProph(input=files[79])
 
 #### remove those IDs with localization scores below an arbitrary value
@@ -51,7 +54,7 @@ newobject<-correlatepositions(object1=MG132.single, object2=MG132.hprp)
 
 
 
-
+##### additional examples below
 
 uv0<-read.PepProph(input=files[39])
 uv0.all<-read.PepProph(input=files[38])
